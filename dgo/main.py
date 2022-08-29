@@ -5,11 +5,14 @@ from PySide6.QtGui import QGuiApplication
 from PySide6.QtCore import QUrl, Slot, QObject
 from .tools.xml import ImportXML
 
+XML_OBJ = None
+
 class Bridge(QObject):
 
     @Slot(str)
     def open_file(self, file_url):
-        xml = ImportXML(file_url)
+        XML_OBJ = ImportXML(file_url)
+        XML_OBJ.get_objects()
 
 
 class Window(QGuiApplication):
