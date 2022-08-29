@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import QtQuick.Dialogs
 
 ApplicationWindow {
     visible: true
@@ -17,13 +18,26 @@ ApplicationWindow {
             MenuItem{
                 id: file
                 text: 'Open'
-                onClicked: {
-                    bridge.open_file()
+                onTriggered: {
+                    fileDialog.open()
                 }
             }
         }
     }
 
+    FileDialog {
+        id: fileDialog
+        title: "Please choose a file"
+        nameFilters: [ "XML files (*.xml)"]
+        onAccepted: {
+            var file_url = fileDialog.selectedFile
+            bridge.open_file(file_url)
+        }
+        onRejected: {
+            console.log("Canceled Open File")
+        }
+    }
+    
     Row{
         id: row_1
         spacing: 20
