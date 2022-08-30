@@ -6,6 +6,9 @@ class Object():
         pass
 
     @abstractmethod
-    def draw():
+    def show():
         pass
+
+    def get_tipo() -> str:
+        return "Objeto"
     

@@ -6,7 +6,10 @@ class Poligono(Object):
     def __init__(self) -> None:
         super().__init__()
         self.points = []
+        self.tipo = 'poligono'
     
     def add_point(self, x, y):
         point = Ponto(x, y)
         self.points.append(point)
+    
+    

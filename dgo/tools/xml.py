@@ -28,7 +28,8 @@ class ImportXML():
             self.tree = ET.parse(url)
             self.root = self.tree.getroot()
 
-    def get_objects(self):
+
+    def read_objects(self):
         for obj in self.root:
             match obj.tag:
                 case 'viewport':
@@ -38,7 +39,7 @@ class ImportXML():
                     vp.set_dimension(min, max)
                     self.viewport = vp
                 case 'Window':
-                    win = ViewPort()
+                    win = Window()
                     min = obj.get('wmin')
                     max = obj.get('wmmax')
                     win.set_dimension(min, max)
@@ -64,6 +65,33 @@ class ImportXML():
                         poligono.add_point(x, y)
                     self.objects.append(poligono)
 
+
+    def get_list(self):
+
+        list_objects = []
+
+        for obj in self.objects:
+            match obj.tipo:
+                case 'ponto':
+                    point = ['ponto',obj.x, obj.y]
+                    list_objects.append(point)
+                case 'reta':
+                    reta = ['reta']
+                    for obj_child in obj.points:
+                        point = [obj_child.x, obj_child.y]
+                        reta.append(point)
+                    list_objects.append(reta)
+                case 'poligono':
+                    poligono = ['poligono']
+                    for obj_child in obj.points:
+                        point = [obj_child.x, obj_child.y]
+                        poligono.append(point)
+                    list_objects.append(poligono)
+        
+        return list_objects
+
+
     def __str__(self) -> str:
-        print(f'{len(self.objects)} Objects')
+        return (f'{len(self.objects)} Objects')
+    
 
