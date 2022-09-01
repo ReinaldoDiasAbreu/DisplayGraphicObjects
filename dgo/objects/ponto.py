@@ -6,8 +6,6 @@ class Ponto(Object):
         super().__init__()
         self.x = x
         self.y = y
-        self.tipo = 'ponto'
     
-    def set_point(self, x, y):
-        self.x = x
-        self.y = y
+    def __repr__(self):
+        return f'({self.x}, {self.y})'

@@ -3,13 +3,11 @@ from .ponto import Ponto
 
 class Poligono(Object):
     
-    def __init__(self) -> None:
+    def __init__(self, lista_pontos = []) -> None:
         super().__init__()
-        self.points = []
-        self.tipo = 'poligono'
+        self.points = lista_pontos
     
-    def add_point(self, x, y):
-        point = Ponto(x, y)
-        self.points.append(point)
+    def __repr__(self):
+        return f'Pontos = {str(self.__points)}'
     
     

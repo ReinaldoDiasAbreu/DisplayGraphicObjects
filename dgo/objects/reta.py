@@ -3,11 +3,10 @@ from .ponto import Ponto
 
 class Reta(Object):
     
-    def __init__(self) -> None:
+    def __init__(self, points = []) -> None:
         super().__init__()
-        self.points = []
-        self.tipo = 'reta'
+        self.points = points
+
+    def __repr__(self):
+        return f'P1 = {self.points[0]} | P2 = {self.points[1]}'
     
-    def add_point(self, x, y):
-        point = Ponto(x, y)
-        self.points.append(point)
