@@ -1,7 +1,8 @@
 # Importa o QtCore
-from ctypes import POINTER
-from nis import match
-from tkinter import W
+from dgo.objects.ponto import Ponto
+from dgo.objects.reta import Reta
+from dgo.objects.poligono import Poligono
+
 from ..qt_core import *
 
 WIDTH_PEN = 3
@@ -12,6 +13,7 @@ class UI_MainWindow(object):
         self.window_data = None
         self.viewport = None
         self.objects = None
+        self.obj_coord = []
 
     def setup_ui(self, parent):
         if not parent.objectName():
@@ -56,6 +58,9 @@ class UI_MainWindow(object):
 
         self.btn_save_file = QPushButton("Save Coords", self.left_menu)
         self.left_menu_top_frame_layout.addWidget(self.btn_save_file)
+
+        self.btn_clear = QPushButton("Clear", self.left_menu)
+        self.left_menu_top_frame_layout.addWidget(self.btn_clear)
         
         # Espaçador do Menu
         self.left_menu_spacer = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
@@ -64,7 +69,6 @@ class UI_MainWindow(object):
         self.left_menu_bottom_frame = QFrame()
         self.left_menu_bottom_frame.setMinimumHeight(50)
         self.left_menu_bottom_frame.setObjectName("left_menu_bottom_frame")
-        #self.left_menu_bottom_frame.setStyleSheet("background-color: #ffffff")
 
         # Criando Label Version
         self.left_menu_bottom_frame_label_version = QLabel("v 1.0.0")
@@ -120,7 +124,7 @@ class UI_MainWindow(object):
         self.pages_style.setSpacing(0)
 
         # Criando ViewPort
-        self.view_objects = QGraphicsScene(self.pages)
+        self.view_objects = QGraphicsScene()
 
         # Inserindo ViewObjects em Pages
         self.view_port = QGraphicsView(self.view_objects, self.pages)
@@ -163,47 +167,14 @@ class UI_MainWindow(object):
         self.viewport = viewport_data
         self.objects = objects_data
 
-        print(self.objects)
-        
-        if self.viewport is not None:
-            self.render_objects()
-    
-
-    def render_objects(self):
-        self.show_objects()
-
-    
-    def resize_viewport(self):
-        self.view_objects.clear()
         self.view_objects.update()
-        w = 640
-        h = 440
+        self.view_objects.clear()
+        
 
         if self.viewport is not None:
-            vpmax = self.viewport.get_vpmax()
-            vpmin = self.viewport.get_vpmin()
-            w = vpmin[0] + vpmax[0]
-            h = vpmin[1] + vpmax[1]
-
-        # Adicionando retângulo de borda
-        janela = QRectF()
-        janela.setRect(0, 0, w, h)
-        self.view_objects.addRect(janela)
-        
-        print("Resize ViewPort to:", self.view_port.rect())
-        self.view_port.setGeometry(0, 0, w+10, h+10)
-        self.view_port.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
-
-
+            self.show_objects()
     
-    def convert_x_to_xvp(self, XW, wmin, wmax, vpmin, vpmax):
-        return ( (XW - wmin[0])/(wmax[0] - wmin[0]) ) * ( vpmax[0] - vpmin[0] )
-
-
-    def convert_y_to_yvp(self, YW, wmin, wmax, vpmin, vpmax):
-        return ( 1 - ((YW - wmin[1])/(wmax[1] - wmin[1])) ) * ( vpmax[1] - vpmin[1] )
-
-
+    
     def show_objects(self):
         wmin = self.window_data.get_wmin()
         wmax = self.window_data.get_wmax()
@@ -221,6 +192,38 @@ class UI_MainWindow(object):
             self.view_objects.update()
 
 
+    def resize_viewport(self):
+        print("Resize ViewPort")
+
+        w = 640
+        h = 440
+
+        if self.viewport is not None:
+            vpmax = self.viewport.get_vpmax()
+            vpmin = self.viewport.get_vpmin()
+            w = vpmin[0] + vpmax[0]
+            h = vpmin[1] + vpmax[1]
+
+        print(f"Defininindo dimenção: ({w},{h})")
+
+        # Adicionando retângulo de borda
+
+        janela = QRectF()
+        janela.setRect(0, 0, w, h)
+        self.view_objects.addRect(janela)
+
+        self.view_port.setGeometry(10, 10, w+10, h+10)
+        self.view_port.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+
+    
+    def convert_x_to_xvp(self, XW, wmin, wmax, vpmin, vpmax):
+        return ( (XW - wmin[0])/(wmax[0] - wmin[0]) ) * ( vpmax[0] - vpmin[0] )
+
+
+    def convert_y_to_yvp(self, YW, wmin, wmax, vpmin, vpmax):
+        return ( 1 - ((YW - wmin[1])/(wmax[1] - wmin[1])) ) * ( vpmax[1] - vpmin[1] )
+
+
     def show_ponto(self, obj, wmin, wmax, vpmin, vpmax):
         xw = obj.get_x()
         yw = obj.get_y()
@@ -229,8 +232,10 @@ class UI_MainWindow(object):
 
         print(f"Ponto: [{xvp}, {yvp}].")
 
+        self.obj_coord.append(Ponto(xvp, yvp))
+
         green_pen = QPen(Qt.green)
-        green_pen.setWidth(WIDTH_PEN+2)
+        green_pen.setWidth(WIDTH_PEN + 2)
         green_brush = QBrush(Qt.green)
 
         self.view_objects.addEllipse(xvp, yvp, 1, 1, green_pen, green_brush)
@@ -245,6 +250,11 @@ class UI_MainWindow(object):
         yvp2 = self.convert_y_to_yvp(points[1][1], wmin, wmax, vpmin, vpmax)
 
         print(f"Reta: [{xvp1}, {yvp1}] - [{xvp2}, {yvp2}].")
+
+        reta_view = Reta()
+        reta_view.add_point(Ponto(xvp1, yvp1))
+        reta_view.add_point(Ponto(xvp2, yvp2))
+        self.obj_coord.append(reta_view)
 
         red_pen = QPen(Qt.red)
         red_pen.setWidth(WIDTH_PEN)
@@ -261,14 +271,20 @@ class UI_MainWindow(object):
 
         print("Poligono: [", end="")
 
+        poligono_view = Poligono()
+        
         for p in points:
             ponto = QPointF()
             xvp = self.convert_x_to_xvp(p[0], wmin, wmax, vpmin, vpmax)
             yvp = self.convert_y_to_yvp(p[1], wmin, wmax, vpmin, vpmax)
+            poligono_view.add_point(Ponto(xvp, yvp))
+
             ponto.setX(xvp)
             ponto.setY(yvp)
             print(f"({xvp}, {yvp}) ", end="")
             poligono.append(ponto)
+        
+        self.obj_coord.append(poligono_view)
         
         print("]")
         

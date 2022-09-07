@@ -28,6 +28,7 @@ class MainWindow(QMainWindow):
         # Ações
         self.ui.btn_open_file.clicked.connect(self.open_file)
         self.ui.btn_save_file.clicked.connect(self.save_file)
+        self.ui.btn_clear.clicked.connect(self.clear)
         
         # Exibe Aplicação
         self.show()
@@ -55,13 +56,18 @@ class MainWindow(QMainWindow):
         print("Save coordinates...", end="")
         if len(file_path[0]) > 0:
             file = open(file_path[0], "w")
-            if self.ui.objects is not None:
-                for obj in self.ui.objects:
+            if self.ui.obj_coord is not None:
+                for obj in self.ui.obj_coord:
                     file.write(str(obj)+"\n")
             file.close()
             print("OK!")
         else:
             print("Erro!")
+    
+    @Slot()
+    def clear(self):
+        self.ui.view_objects.clear()
+        self.ui.view_objects.update()
 
 
 def start():
