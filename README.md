@@ -30,9 +30,14 @@ poetry = 1.1.15
 
 Basta clonar o repositório em um diretório de sua preferência e executar o arquivo main.py.
 
-Diga como essa etapa será:
+Após instalar as depêndencias use:
 
 ```
 python main.py
 ```
+Ou caso use o gerenciador Poetry:
 
+```
+poetry install
+poetry run startapp
+```
