@@ -28,7 +28,6 @@ class MainWindow(QMainWindow):
         # Ações
         self.ui.btn_open_file.clicked.connect(self.open_file)
         self.ui.btn_save_file.clicked.connect(self.save_file)
-        self.ui.btn_clear.clicked.connect(self.clear)
         
         # Exibe Aplicação
         self.show()
@@ -75,4 +74,6 @@ def start():
     app = QApplication(sys.argv)
     main_window = MainWindow()
     sys.exit(app.exec())
-    
+
+
+start()

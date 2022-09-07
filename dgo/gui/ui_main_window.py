@@ -59,8 +59,6 @@ class UI_MainWindow(object):
         self.btn_save_file = QPushButton("Save Coords", self.left_menu)
         self.left_menu_top_frame_layout.addWidget(self.btn_save_file)
 
-        self.btn_clear = QPushButton("Clear", self.left_menu)
-        self.left_menu_top_frame_layout.addWidget(self.btn_clear)
         
         # Espaçador do Menu
         self.left_menu_spacer = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
