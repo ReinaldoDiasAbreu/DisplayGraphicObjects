@@ -4,7 +4,7 @@ from ..objects.viewport import ViewPort
 from ..objects.ponto import Ponto
 from ..objects.reta import Reta
 from ..objects.poligono import Poligono
-
+import copy
 from ..qt_core import *
 
 import xml.etree.ElementTree as ET
@@ -28,42 +28,48 @@ class ImportXML():
             self.root = self.tree.getroot()
         except:
              print('ERROR: This file path does not exist !!!')
+             
 
     def read_objects(self):
         if self.root is not None:
             for obj in self.root:
-                match obj.tag:
-                    case 'viewport':
+
+                    if obj.tag == 'viewport':
                         vp = ViewPort()
                         vp.vpmin = [float(obj[0].get('x')), float(obj[0].get('y'))]
                         vp.vpmax = [float(obj[1].get('x')), float(obj[1].get('y'))]
                         self.viewport = vp
-                    case 'Window':
+
+                    elif obj.tag == 'window':
                         win = Window()
                         win.wmin = [float(obj[0].get('x')), float(obj[0].get('y'))]
                         win.wmax = [float(obj[1].get('x')), float(obj[1].get('y'))]
                         self.window = win
-                    case 'ponto':
+
+                    elif obj.tag == 'ponto':
                         point = Ponto()
-                        point.x = obj.get('x')
-                        point.y = obj.get('y')
+                        point.x = float(obj.get('x'))
+                        point.y = float(obj.get('y'))
                         self.objects.append(point)
-                    case 'reta':
+
+                    elif obj.tag == 'reta':
                         reta = Reta()
                         for obj_child in obj:
                             point = Ponto()
-                            point.x = obj_child.get('x')
-                            point.y = obj_child.get('y')
-                            reta.points.append(point)
+                            point.x = float(obj_child.get('x'))
+                            point.y = float(obj_child.get('y'))
+                            reta.add_point(point)
                         self.objects.append(reta)
-                    case 'poligono':
+                        
+                    elif obj.tag == 'poligono':
                         poligono = Poligono()
                         for obj_child in obj:
                             point = Ponto()
-                            point.x = obj_child.get('x')
-                            point.y = obj_child.get('y')
-                            poligono.points.append(point)
+                            point.x = float(obj_child.get('x'))
+                            point.y = float(obj_child.get('y'))
+                            poligono.add_point(point)
                         self.objects.append(poligono)
+
 
     def open_file(self, parent):
         print("Open XML File... ", end="")
@@ -75,14 +81,22 @@ class ImportXML():
         else:
             print("Erro!")
 
+
     def get_window(self):
         return self.window
     
+
     def get_viewport(self):
         return self.viewport
+
     
     def get_objects(self):
         return self.objects
+
+
+    def get_num_objects(self):
+        return len(self.objects)
+        
 
     def __str__(self) -> str:
         return (f'Read {len(self.objects)} objects.')

@@ -7,5 +7,11 @@ class Ponto(Object):
         self.x = x
         self.y = y
     
+    def get_x(self):
+        return self.x
+
+    def get_y(self):
+        return self.y
+        
     def __repr__(self):
-        return f'({self.x}, {self.y})'
+        return f'Ponto:({self.x}, {self.y})'
