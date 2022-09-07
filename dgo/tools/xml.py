@@ -1,9 +1,11 @@
+import imp
 from ..objects.window import Window
 from ..objects.viewport import ViewPort
 from ..objects.ponto import Ponto
 from ..objects.reta import Reta
 from ..objects.poligono import Poligono
 
+from ..qt_core import *
 
 import xml.etree.ElementTree as ET
 import os
@@ -33,12 +35,14 @@ class ImportXML():
                 match obj.tag:
                     case 'viewport':
                         vp = ViewPort()
-                        vp.vpmin = obj.get('vpmin')
-                        vp.vpmax = obj.get('vpmmax')
+                        vp.vpmin = [float(obj[0].get('x')), float(obj[0].get('y'))]
+                        vp.vpmax = [float(obj[1].get('x')), float(obj[1].get('y'))]
+                        self.viewport = vp
                     case 'Window':
                         win = Window()
-                        win.wmin = obj.get('wmin')
-                        win.wmax = obj.get('wmmax')
+                        win.wmin = [float(obj[0].get('x')), float(obj[0].get('y'))]
+                        win.wmax = [float(obj[1].get('x')), float(obj[1].get('y'))]
+                        self.window = win
                     case 'ponto':
                         point = Ponto()
                         point.x = obj.get('x')
@@ -61,6 +65,24 @@ class ImportXML():
                             poligono.points.append(point)
                         self.objects.append(poligono)
 
+    def open_file(self, parent):
+        print("Open XML File... ", end="")
+        file_path = QFileDialog().getOpenFileName(parent=parent, caption='Open XML File', filter='*.xml')
+        if len(file_path[0]) > 0:
+            self.open_xml(file_path[0])
+            self.read_objects()
+            print("OK!")
+        else:
+            print("Erro!")
+
+    def get_window(self):
+        return self.window
+    
+    def get_viewport(self):
+        return self.viewport
+    
+    def get_objects(self):
+        return self.objects
 
     def __str__(self) -> str:
         return (f'Read {len(self.objects)} objects.')

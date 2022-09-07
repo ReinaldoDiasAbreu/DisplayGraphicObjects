@@ -8,6 +8,6 @@ class Poligono(Object):
         self.points = lista_pontos
     
     def __repr__(self):
-        return f'Pontos = {str(self.__points)}'
+        return f'Pontos = {str(self.points)}'
     
     
