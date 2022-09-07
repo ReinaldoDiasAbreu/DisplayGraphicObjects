@@ -1,11 +1,11 @@
-import imp
-from ..objects.window import Window
-from ..objects.viewport import ViewPort
-from ..objects.ponto import Ponto
-from ..objects.reta import Reta
-from ..objects.poligono import Poligono
-import copy
-from ..qt_core import *
+from .qt_core import *
+
+from .window import Window
+from .viewport import ViewPort
+from .ponto import Ponto
+from .reta import Reta
+from .poligono import Poligono
+
 
 import xml.etree.ElementTree as ET
 import os

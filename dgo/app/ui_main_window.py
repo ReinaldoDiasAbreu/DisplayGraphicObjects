@@ -1,9 +1,10 @@
 # Importa o QtCore
-from dgo.objects.ponto import Ponto
-from dgo.objects.reta import Reta
-from dgo.objects.poligono import Poligono
+from .qt_core import *
 
-from ..qt_core import *
+from .ponto import Ponto
+from .reta import Reta
+from .poligono import Poligono
+
 
 WIDTH_PEN = 3
 
@@ -171,6 +172,8 @@ class UI_MainWindow(object):
 
         if self.viewport is not None:
             self.show_objects()
+        else:
+            print("Objects not found!")
     
     
     def show_objects(self):
@@ -180,13 +183,13 @@ class UI_MainWindow(object):
         vpmax = self.viewport.get_vpmax()
 
         self.resize_viewport()
+        print("Objetos:", self.objects)
 
         for obj in self.objects:
-
             str_type = str(type(obj))
-            if str_type == "<class 'dgo.objects.ponto.Ponto'>": self.show_ponto(obj, wmin, wmax, vpmin, vpmax)
-            elif str_type == "<class 'dgo.objects.reta.Reta'>": self.show_reta(obj, wmin, wmax, vpmin, vpmax)
-            elif str_type == "<class 'dgo.objects.poligono.Poligono'>": self.show_poligono(obj, wmin, wmax, vpmin, vpmax)
+            if str_type == "<class 'app.ponto.Ponto'>": self.show_ponto(obj, wmin, wmax, vpmin, vpmax)
+            elif str_type == "<class 'app.reta.Reta'>": self.show_reta(obj, wmin, wmax, vpmin, vpmax)
+            elif str_type == "<class 'app.poligono.Poligono'>": self.show_poligono(obj, wmin, wmax, vpmin, vpmax)
             self.view_objects.update()
 
 

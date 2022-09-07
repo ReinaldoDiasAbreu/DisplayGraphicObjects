@@ -2,12 +2,9 @@ import sys
 import os
 
 # Importa o QtCore
-from .qt_core import *
-
-# Importa a main window
-from .gui.ui_main_window import UI_MainWindow
-from .objects import *
-from .tools.xml import ImportXML
+from app.qt_core import *
+from app.ui_main_window import UI_MainWindow
+from app.xml import ImportXML
 
 
 class MainWindow(QMainWindow):
